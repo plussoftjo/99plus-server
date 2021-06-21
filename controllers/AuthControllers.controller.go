@@ -106,7 +106,7 @@ func AppAuth(c *gin.Context) {
 	}
 
 	var orders []models.Orders
-	config.DB.Where("user_id = ?", user.ID).Find(&orders)
+	config.DB.Where("user_id = ?", user.ID).Preload("OrderItems").Find(&orders)
 
 	var addresses []models.Addresses
 	config.DB.Where("user_id = ?", user.ID).Find(&addresses)
@@ -149,7 +149,7 @@ func AppLoginController(c *gin.Context) {
 	}
 
 	var orders []models.Orders
-	config.DB.Where("user_id = ?", user.ID).Find(&orders)
+	config.DB.Where("user_id = ?", user.ID).Preload("OrderItems").Find(&orders)
 
 	var addresses []models.Addresses
 	config.DB.Where("user_id = ?", user.ID).Find(&addresses)

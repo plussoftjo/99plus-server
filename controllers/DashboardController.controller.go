@@ -42,7 +42,7 @@ func IndexDashboard(c *gin.Context) {
 	config.DB.Order("id desc").Preload("Categories").Preload("SubCategories").Limit(7).Find(&lastItems)
 
 	var todayAddedItemsCount int64
-	config.DB.Model(&models.Items{}).Where("created_at BETWEEN ? AND ?", startOfMonth, endOfMonth).Count(&todayAddedItemsCount)
+	config.DB.Model(&models.Items{}).Where("created_at BETWEEN ? AND ?", startOfToday, endOfToday).Count(&todayAddedItemsCount)
 
 	var lastClients []models.User
 	config.DB.Limit(15).Where("roles_id = ?", "1000").Find(&lastClients)
