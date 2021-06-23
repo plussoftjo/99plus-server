@@ -7,6 +7,7 @@ import (
 	"server/models"
 
 	"github.com/gin-gonic/gin"
+	"github.com/jinzhu/gorm"
 )
 
 // StoreUserAddress ..
@@ -120,7 +121,9 @@ func AppShowOrder(c *gin.Context) {
 	var orderItems []models.OrderItems
 
 	config.DB.Where("id = ?", orderID).First(&order)
-	config.DB.Preload("Item").Where("order_id = ?", orderID).Find(&orderItems)
+	config.DB.Preload("Item", func(db *gorm.DB) *gorm.DB {
+		return db.Scopes(models.WithTranslation("items"))
+	}).Where("order_id = ?", orderID).Find(&orderItems)
 
 	c.JSON(200, gin.H{
 		"order":      order,
