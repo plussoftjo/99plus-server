@@ -10,6 +10,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/jinzhu/gorm"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -149,7 +150,9 @@ func AppLoginController(c *gin.Context) {
 	}
 
 	var orders []models.Orders
-	config.DB.Where("user_id = ?", user.ID).Preload("OrderItems").Find(&orders)
+	config.DB.Where("user_id = ?", user.ID).Preload("OrderItems", func(db *gorm.DB) *gorm.DB {
+		return db.Preload("Item")
+	}).Find(&orders)
 
 	var addresses []models.Addresses
 	config.DB.Where("user_id = ?", user.ID).Find(&addresses)
